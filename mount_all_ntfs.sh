@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #····································
-# Intro : 挂载你的 NTFS 格式硬盘    ·
+# Intro : Mount your NTFS formatted hard drive
 #-----------------------------------·
 # Author: Traces                    ·
 #-----------------------------------·
@@ -11,10 +11,10 @@
 #····································
 
 
-# 指定了这个 flag 在挂载完成后会自动打开磁盘
+# Specify this flag to automatically open the disk after the mount is complete
 openFlag="--open"
 
-# 0 不打印过程 1  打印
+# 0 do not print process 1 print
 isLogger=1
 
 log(){
@@ -27,18 +27,18 @@ log(){
 mount | grep ntfs | while read line
 do
     df=(`echo $line | awk '{printf ("%s %s",$1,$3)}'`)
-    log "将${df[1]}挂载成可读写模式"
+    log "Mount ${df[1]} in read-write mode"
     sudo umount ${df[0]}
-    log "创建挂载文件夹：${df[1]}"
+    log "Create mount folder: ${df[1]}"
     sudo mkdir ${df[1]}
-    log "请稍候，正在进行${df[0]}的挂载工作, 请勿断开链接。"
+    log "Please wait, ${df[0]} is being mounted, please do not disconnect."
     sudo mount_ntfs -o rw,nobrowse ${df[*]}
     log "${df[0]} => ${df[1]}"
-    log "读写模式挂载完毕!"
-    # 如果指定了打开的标识符
+    log "The read-write mode is mounted!"
+    # If an open identifier is specified
     if [ -n "$1" ] && [ $1 == $openFlag ]
     then 
-        log " 由于你指定了$openFlag, 即将打开 ${df[1]}";
+        log "Since you specified $openFlag, ${df[1]} is about to be opened";
         open ${df[1]};
     fi
 done
